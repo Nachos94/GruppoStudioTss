@@ -109,7 +109,8 @@ public class Concessionaria {
         int i = 0;
 
         do {
-            tx = JOptionPane.showInputDialog("Quanto mi paghi questa volta?"
+            tx = JOptionPane.showInputDialog("Rata " + (i+1) + ") di " + n_rate + ")\n" 
+                    + "Quanto mi paghi questa volta?"
                     + " mancano" + costo + " euro di " + costo_iniziale);
 
             rata = Integer.parseInt(tx);
