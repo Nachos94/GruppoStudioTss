@@ -30,8 +30,10 @@ static String comandoRx;
         System.out.println("Server started");
         //InetAddress addr=InetAddress.getByName("192.168.40.212);   //192.168.40.213
         ServerSocket srvSocket = new ServerSocket(21000);
-       do { 
-            System.out.println("Waiting connection...");
+         System.out.println("Waiting connection...");
+       
+         do { 
+           
             Socket s = srvSocket.accept(); // spinotto collegamneto con client 
             System.out.println("Connection accepted...");
  

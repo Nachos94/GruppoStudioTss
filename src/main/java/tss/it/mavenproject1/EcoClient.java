@@ -46,7 +46,10 @@ static String tx;
         //stampo pacchetto di input    
          System.out.println(comandoRx);
          
-         
+         if(tx.equals("fine")) {
+           s.close();
+           System.out.println("connection ended..."); }
+      
        }while(!tx.equals("fine"));
        
          
@@ -65,6 +68,9 @@ static String tx;
          */
         
     
-    }
+    
 }
+    
+}
+
 
