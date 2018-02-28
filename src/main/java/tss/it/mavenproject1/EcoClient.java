@@ -35,10 +35,14 @@ static String tx;
          OutputStream outputStream = s.getOutputStream();
          PrintWriter out = new PrintWriter(outputStream, true);
         //riempio il pacchetto di output
-      do{
+      
+        do{
          tx = JOptionPane.showInputDialog("cosa vuoi scrivere al server?");
          out.println(tx);
          
+           if(tx.equals("fine")) {
+           s.close();
+           System.out.println("connection ended..."); } else {
           //creo pacchetto di input
          InputStream is = s.getInputStream(); 
          BufferedReader bf = new BufferedReader(new InputStreamReader(is));
@@ -46,11 +50,9 @@ static String tx;
         //stampo pacchetto di input    
          System.out.println(comandoRx);
          
-         if(tx.equals("fine")) {
-           s.close();
-           System.out.println("connection ended..."); }
+           }
       
-       }while(!tx.equals("fine"));
+       }while(true);
        
          
         

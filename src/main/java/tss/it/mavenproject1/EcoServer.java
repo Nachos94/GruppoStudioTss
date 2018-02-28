@@ -30,16 +30,23 @@ static String comandoRx;
         System.out.println("Server started");
         //InetAddress addr=InetAddress.getByName("192.168.40.212);   //192.168.40.213
         ServerSocket srvSocket = new ServerSocket(21000);
-         System.out.println("Waiting connection...");
-       
-         do { 
-           
+        
+        
+        while(true){ 
+            System.out.println("Waiting connection...");
             Socket s = srvSocket.accept(); // spinotto collegamneto con client 
             System.out.println("Connection accepted...");
- 
+         do { 
+           
             InputStream is = s.getInputStream();
             BufferedReader bf = new BufferedReader(new InputStreamReader(is));
             comandoRx = bf.readLine();
+            
+            if(comandoRx.equals("fine")) {
+
+                s.close();
+                System.out.println("connection ended...");} 
+            else {
             System.out.println(comandoRx);
 
             
@@ -47,16 +54,12 @@ static String comandoRx;
             PrintWriter w = new PrintWriter(outputStream, true);
             
             w.println(comandoRx +"   "+ comandoRx );
-
-            if(comandoRx.equals("fine")) {
-
-                s.close();
-                System.out.println("connection ended...");}
+            }
             
 
- }while(true); 
+        }while(true); 
  
- 
+        }
  
  
     }
