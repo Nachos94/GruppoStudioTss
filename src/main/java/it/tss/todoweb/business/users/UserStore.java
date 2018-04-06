@@ -60,14 +60,10 @@ public class UserStore {
     public boolean login(String username, String password) {
 
         boolean check = false;
-
-        if (findByUsername(username) != null && findPass(password) != null) {
-
+      if (findByUsername(username) != null && findPass(password) != null) {
             check = true;
         }
-
         return check;
-
     }
 
 }
