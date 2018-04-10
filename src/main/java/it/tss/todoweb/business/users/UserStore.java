@@ -5,7 +5,9 @@
  */
 package it.tss.todoweb.business.users;
 
+import it.tss.todoweb.business.DateUtils;
 import java.util.List;
+import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +21,7 @@ public class UserStore {
 
     @PersistenceContext
     private EntityManager em;
+    
 
     public User findByUsername(String username) {
         return em.createNamedQuery(User.FIND_USERNAME, User.class)
@@ -57,13 +60,34 @@ public class UserStore {
         em.remove(u);
     }
 
-    public boolean login(String username, String password) {
-
-        boolean check = false;
+    public User login(String username, String password) {
+       
+        User user = null;
+        
       if (findByUsername(username) != null && findPass(password) != null) {
-            check = true;
-        }
-        return check;
+          user = findByUsername(username);
+           
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            user.setTokenend(DateUtils.scadenzaToken(20));
+        } 
+    return user;
+      
     }
-
+    
+    public User findToken(String token) {
+        
+     return em.createNamedQuery(User.FIND_TOKEN, User.class)
+             .setParameter("token", token)
+             .getSingleResult();
+        
+        
+    }
+    
 }
+      
+      
+    
+
+
+

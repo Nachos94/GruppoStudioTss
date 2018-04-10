@@ -6,6 +6,7 @@
 package it.tss.todoweb.business.users;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+
 
 /**
  *
@@ -24,7 +29,8 @@ import javax.persistence.NamedQuery;
 @NamedQuery(name=User.FIND_ALL ,query ="select u from User u order by u.nome desc "),
     @NamedQuery(name=User.FIND_EMAIL,query ="select u from User u where u.email = :email"),
     @NamedQuery(name=User.FIND_PASS ,query ="select u from User u where u.password = :pwd"),
-    @NamedQuery(name= User.FIND_USERNAME, query="select u from User u where u.nome = :username")
+    @NamedQuery(name= User.FIND_USERNAME, query="select u from User u where u.nome = :username"),
+    @NamedQuery(name=User.FIND_TOKEN, query="select u from User u where u.token = :token")
 })
 
 
@@ -35,6 +41,15 @@ public class User implements Serializable {
     public static final String FIND_EMAIL = "User.findEmail";
     public static final String FIND_PASS = "User.findPass";    
     public static final String FIND_USERNAME = "User.findUsername"; 
+    public static final String FIND_TOKEN = "User.findToken";
+    
+    private String token;
+    
+    @Version
+    private long version;
+    
+   @Temporal(TemporalType.TIMESTAMP)
+    private Date tokenend;
     
     @Basic(optional = false)
     private String nome;
@@ -116,6 +131,31 @@ public class User implements Serializable {
         return "User{" + "nome=" + nome + ", password=" + password + ", email=" + email + ", id=" + id + '}';
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Date getTokenend() {
+        return tokenend;
+    }
+
+    public void setTokenend(Date tokenend) {
+        this.tokenend = tokenend;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
+    
  
     
 }

@@ -1,20 +1,21 @@
+package it.tss.todoweb.business;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.tss.todoweb.business;
+
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 /**
  *
@@ -40,18 +41,20 @@ public class DateUtils {
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-    public static Date dateFromString(String date)  {
+    public static Date dateFromString(String date) throws ParseException {
         if (date == null) {
             return null;
         }
-        try {
-            return df.parse(date);
-        } catch (ParseException ex) {
-            return null;
-        }
+        return df.parse(date);
+    }
+
+    public static String dateToString(Date date) {
+        return df.format(date);
     }
     
-    public static String dateToString(Date date)  {
-        return df.format(date);
+    //aggiunge minuti alla data quando vviene chiamata --> serve per la login 
+    public static Date scadenzaToken(int min){
+        LocalDateTime plus = LocalDateTime.now().plus(min,ChronoUnit.MINUTES); 
+        return asDate(plus);
     }
 }

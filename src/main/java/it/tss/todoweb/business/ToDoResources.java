@@ -5,6 +5,7 @@
  */
 package it.tss.todoweb.business;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
@@ -24,12 +25,14 @@ import javax.ws.rs.core.Response;
  *
  * @author tss
  */
+
 @Path("todo")
 public class ToDoResources {
 
     @Inject
     ToDoStore store;
-
+    
+    @Secured
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<ToDo> all() {
@@ -60,7 +63,7 @@ public class ToDoResources {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response create(@FormParam("titolo") String titolo,
-            @FormParam("testo") String testo, @FormParam("il") String il) {
+            @FormParam("testo") String testo, @FormParam("il") String il) throws ParseException {
         ToDo tosave;
         tosave = new ToDo(titolo, testo, DateUtils.dateFromString(il));
         store.save(tosave);
@@ -72,7 +75,7 @@ public class ToDoResources {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response update(@PathParam("id") Long id, @FormParam("titolo") String titolo,
-            @FormParam("testo") String testo, @FormParam("il") String il) {
+            @FormParam("testo") String testo, @FormParam("il") String il) throws ParseException {
         ToDo tosave;
         System.out.println(String.format("---UPDATE---- titolo:%s, testo=%s, il:%s", titolo, testo, il));
 

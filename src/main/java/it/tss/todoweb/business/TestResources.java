@@ -40,7 +40,7 @@ public class TestResources {
 
     }
 
-    @sicurityFilter
+   
     @GET
     @Path("resp")
     public Response resp() {

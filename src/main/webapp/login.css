@@ -1,0 +1,42 @@
+
+#imgprofilo{
+
+position: relative ;
+left: 50px;
+
+}
+
+#input {
+
+    position: absolute;
+    top: 10%;
+    left: 25%;
+    opacity: 0;
+    border: solid 1px lightgray;
+    border-radius: 20%;
+    background-color: white;
+    padding: 3%;
+    transition: 1s;
+    height: 400px;
+    width: 400px;
+    }
+    
+    .btn-primary {
+    
+    display: inline;
+    position: relative;
+    top: 10px;
+    left: 35%;
+    }
+    
+    .list-group{
+    
+        display: inline-block;
+        position: relative;
+        top: 25px; 
+        left: 5%;
+        width: 90%;
+        transition: 1s;
+    
+    
+    }
