@@ -10,7 +10,6 @@ import com.mycompany.Filebusiness.FileCloudStore;
 import com.mycompany.utility.AlreadyHaveThatUserException;
 import java.io.File;
 import java.io.FileNotFoundException;
-
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -29,6 +28,7 @@ public class UserResurces {
 
     @Inject
     UserStore userstore;
+    
     @Inject
     FileCloudStore filecloudstore;
 
@@ -43,7 +43,6 @@ public class UserResurces {
         } else {
             throw new AlreadyHaveThatUserException();
         }
-
     }
 
     @POST
