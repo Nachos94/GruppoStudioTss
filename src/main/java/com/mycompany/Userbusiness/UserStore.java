@@ -24,7 +24,7 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class UserStore {
 
-    @PersistenceContext(unitName = "PROVA")
+    @PersistenceContext
     EntityManager em;
 
     public List<User> findAll() {
