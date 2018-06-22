@@ -28,7 +28,7 @@ public class FileCloudStore {
         return this.DATA_DIR;
     }
 
-    @PersistenceContext(unitName = "PROVA")
+    @PersistenceContext
     EntityManager em;
 
     public List<FileCloud> findAllbyUser(String username) {
