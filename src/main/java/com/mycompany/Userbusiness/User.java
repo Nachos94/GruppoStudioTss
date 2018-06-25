@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -42,6 +44,7 @@ public class User implements Serializable {
     public static final String FIND_BY_TOKEN = "User.findByToken";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String token;
@@ -69,9 +72,9 @@ public class User implements Serializable {
     private String password;
     private List<FileCloud> filesAssociati;
 
- 
+    public User() {
+    }
 
-    
     public String getPassword() {
         return password;
     }

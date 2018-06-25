@@ -21,7 +21,7 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class FileCloudStore {
 
-    private final String DATA_DIR = "C:\\Users\\andrea.antonazzo\\Desktop\\Datadir\\";
+    private final String DATA_DIR = "/home/tss/Documenti";
 
     public String getDataDir() {
 
@@ -47,9 +47,15 @@ public class FileCloudStore {
 
     public FileCloud findByIdentificativo(String identificativo) {
 
-        return em.createNamedQuery(FileCloud.FIND_BY_IDENTIFICATIVO, FileCloud.class)
-                .setParameter("identificativo", identificativo)
-                .getSingleResult();
+        try {
+            return em.createNamedQuery(FileCloud.FIND_BY_IDENTIFICATIVO, FileCloud.class)
+                    .setParameter("identificativo", identificativo)
+                    .getSingleResult();
+        } catch (Exception ex) {
+
+            return null;
+
+        }
     }
 
     public List<FileCloud> findByData(Date data) {

@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 /**
@@ -42,16 +44,36 @@ public class UserStore {
 
     public User findByUsername(String Username) {
 
-        return em.createNamedQuery(User.FIND_BY_USERNAME, User.class)
-                .setParameter("Username", Username)
-                .getSingleResult();
+        User report = null;
+
+        try {
+
+            report = em.createNamedQuery(User.FIND_BY_USERNAME, User.class)
+                    .setParameter("username", Username)
+                    .getSingleResult();
+
+        } catch (Exception ex) {
+
+        }
+
+        return report;
     }
+
 
     public User findByEmail(String email) {
 
+        try{
         return em.createNamedQuery(User.FIND_BY_EMAIL, User.class)
                 .setParameter("email", email)
                 .getSingleResult();
+        
+        }catch(NoResultException ex) {
+            
+            return null;
+            
+        }
+        
+        
     }
 
     public void addUser(User u) {
@@ -61,9 +83,10 @@ public class UserStore {
 
     public User login(String username, String password) throws Exception {
 
-        User u = null;
+       User u ;
 
         if (findByUsername(username) != null && password.equals(findByUsername(username).getPassword())) {
+        
             u = findByUsername(username);
             u.setToken(UUID.randomUUID().toString());
             LocalDateTime tend = LocalDateTime.now().plus(60, ChronoUnit.MINUTES);
@@ -87,8 +110,8 @@ public class UserStore {
 
     public void validaUser(User user) throws Exception {
 
-        if (findToken(user.getToken()) != null
-                && user.getTokenend().before(new Date())) {
+        if (findToken(user.getToken()) != null && user.getTokenend().after(new Date())) {
+       
         } else {
 
             throw new TokenExpiredException();

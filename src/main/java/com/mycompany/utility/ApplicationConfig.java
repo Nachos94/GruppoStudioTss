@@ -12,7 +12,7 @@ import javax.ws.rs.core.Application;
  *
  * @author andrea.antonazzo
  */
-@ApplicationPath("ciaccloud")
+@ApplicationPath("/ciaccloud")
 public class ApplicationConfig extends Application{
     
 }

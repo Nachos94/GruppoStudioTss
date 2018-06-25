@@ -15,7 +15,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
@@ -30,9 +30,16 @@ public class UserResurces {
 
     @Inject
     UserStore userstore;
-    
+
     @Inject
     FileCloudStore filecloudstore;
+
+    @GET
+    public Response ok() {
+
+        return Response.ok("report ok").build();
+
+    }
 
     @POST
     @Path("/saveuser")
@@ -40,9 +47,8 @@ public class UserResurces {
     public Response saveUser(Richiesta richiesta) throws Exception {
 
         User u = richiesta.getUser();
-        
-        
-        if (userstore.findByUsername(u.getUsername()) != null && userstore.findByEmail(u.getEmail()) != null) {
+
+        if (userstore.findByUsername(u.getUsername()) == null && userstore.findByEmail(u.getEmail()) == null) {
             userstore.addUser(u);
             return Response.ok().build();
         } else {
@@ -52,11 +58,12 @@ public class UserResurces {
 
     @POST
     @Path("/caricaprofilo")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response caricaprofilo(@FormParam("username") String username, @FormParam("password") String password) throws Exception {
-       
-        User u = userstore.login(username, password);
-        
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response caricaprofilo(Richiesta richiesta) throws Exception {
+
+        User user = richiesta.getUser();
+        User u = userstore.login(user.getUsername(), user.getPassword());
+
         List<FileCloud> listafile = filecloudstore.findAllbyUser(u.getUsername());
         u.setFilesAssociati(listafile);
 
@@ -70,14 +77,14 @@ public class UserResurces {
 
         FileCloud filecloud = richiesta.getFilecloud();
         User user = richiesta.getUser();
-        
-        
+
         userstore.validaUser(user);
         filecloud.setUser(user);
         filecloudstore.insert(filecloud);
+        
 
         User u = userstore.findByUsername(user.getUsername());
-
+        u.getFilesAssociati().add(filecloud);
         return Response.ok(u).build();
     }
 
@@ -86,10 +93,9 @@ public class UserResurces {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response rimuoviFile(Richiesta richiesta) throws Exception {
 
-       long id = richiesta.getId();
-       User user = richiesta.getUser();
-                
-        
+        long id = richiesta.getId();
+        User user = richiesta.getUser();
+
         userstore.validaUser(user);
         filecloudstore.delete(id);
 
@@ -104,8 +110,7 @@ public class UserResurces {
     public Response scaricaFile(Richiesta richiesta) throws Exception {
 
         long fileid = richiesta.getId();
-        
-        
+
         FileCloud f = filecloudstore.findByID(fileid);
         File file = new File(filecloudstore.getDataDir() + f.getIdentificativo());
 

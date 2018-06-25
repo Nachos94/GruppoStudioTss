@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -48,10 +50,16 @@ public class FileCloud implements Serializable {
     
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Transient
     private File file;
+    
+    private User user;
+    private String identificativo;
+    private Date data;
+    
 
     @Override
     public int hashCode() {
@@ -113,9 +121,7 @@ public class FileCloud implements Serializable {
     public void setData(Date data) {
         this.data = data;
     }
-    private User user;
-    private String identificativo;
-    private Date data;
+  
 
     public Long getId() {
         return id;

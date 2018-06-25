@@ -21,6 +21,10 @@ public class Richiesta {
     private long id;
     
 
+    public Richiesta() {
+    
+}
+    
     public String getUsername() {
         return username;
     }
