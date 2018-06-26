@@ -8,6 +8,7 @@ package com.mycompany.Filebusiness;
 import com.mycompany.utility.DuplicateFileCloudException;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -21,7 +22,7 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class FileCloudStore {
 
-    private final String DATA_DIR = "/home/tss/Documenti";
+    private final String DATA_DIR = "/home/tss/Documenti/";
 
     public String getDataDir() {
 
@@ -71,8 +72,15 @@ public class FileCloudStore {
             //fare outputstream di scrittura su disco del server per salvare il file contenuto in filecloud 
             //ma che non viene trattato come colonna grazie Juri
             em.merge(filecloud);
-            new FileOutputStream(DATA_DIR + filecloud.getFile().getName());
-
+            
+            File file = filecloud.getFile();
+            
+            FileOutputStream out = new FileOutputStream(file);
+            
+            
+            
+            
+                         
         } else {
 
             throw new DuplicateFileCloudException();
