@@ -46,11 +46,12 @@ public class FileCloudStore {
                 .getSingleResult();
     }
 
-    public FileCloud findByIdentificativo(String identificativo) {
+    public FileCloud findByIdentificativo(String identificativo , String username) {
 
         try {
             return em.createNamedQuery(FileCloud.FIND_BY_IDENTIFICATIVO, FileCloud.class)
                     .setParameter("identificativo", identificativo)
+                    .setParameter("username", username)
                     .getSingleResult();
         } catch (Exception ex) {
 
@@ -68,18 +69,15 @@ public class FileCloudStore {
 
     public void insert(FileCloud filecloud) throws Exception {
 
-        if (filecloud.getId() == null && findByIdentificativo(filecloud.getIdentificativo()) == null) {
+        if (filecloud.getId() == null && findByIdentificativo(filecloud.getIdentificativo() , filecloud.getUser().getUsername()) == null) {
             //fare outputstream di scrittura su disco del server per salvare il file contenuto in filecloud 
             //ma che non viene trattato come colonna grazie Juri
             em.merge(filecloud);
             
             File file = filecloud.getFile();
+            file.renameTo(new File(DATA_DIR + "/Datadir/" + file.getName()));
             
-            FileOutputStream out = new FileOutputStream(file);
-            
-            
-            
-            
+                
                          
         } else {
 

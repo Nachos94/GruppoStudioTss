@@ -59,6 +59,14 @@ public class MyExcepionMapper implements ExceptionMapper<Exception> {
             
         }
         
+        if(exception instanceof NullPointerException) {
+            
+            response = Response.status(Response.Status.BAD_REQUEST)
+                    .header("causa", "errore generico")
+                    .build();
+            
+        }
+        
         return response;
     }
 
