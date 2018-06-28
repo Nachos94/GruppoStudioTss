@@ -14,74 +14,89 @@ var urlSig = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/saveus
 
 angular.module("application", []).controller("controller", function ($scope, $http) {
 
-
+    $scope.jUser = {};
     $scope.login = false;
-
     $scope.showS = function () {
         $scope.login = false;
     };
-
     $scope.showL = function () {
         $scope.login = true;
     };
-
     //funzione che effettua chiamata ajax per login o sigin 
-    $scope.jUser = {};
-    
-    var richiesta ;
-    
-    
+
+
+    var richiesta;
+
     $scope.logga = function () {
-        
-    console.log($scope.jUser);
-     
-        richiesta = {"user" :  $scope.jUser}
-    var richiestas = JSON.stringify(richiesta)
-      
-    
-    $http({
-        
-        method : "POST",
-        url : urlLog,
-        body : richiestas 
-        
-    }).then(function successo(response){
-        
-    window.location = "benvenuto.html";
-    localStorage.setItem("user", response);
-    
-    }), function fallimento(response){
-        
-        alert(response.statusText);
-        
+        richiesta =
+                {"user": {
+
+                        "username": document.getElementById("nomeutente").value,
+                        "password": document.getElementById("secret").value
+
+                    },
+                    "filecloud": "",
+                    "username": "",
+                    "password": "",
+                    "id": ""};
+
+
+        var richiestas = JSON.stringify(richiesta);
+
+        $http({
+            method: "POST",
+            url: urlLog,
+            data: richiestas,
+
+        }).then(function (response) {
+
+            window.location = "benvenuto.html";
+
+            localStorage.setItem("user", angular.toJson(response.data));
+
+
+        }, function (response) {
+
+            alert(response.statusText);
+
+
+        });
     }
-    
+
+    $scope.registrati = function () {
+
+        richiesta =
+                {"user": {
+
+                        "username": document.getElementById("username").value,
+                        "password": document.getElementById("password").value,
+                        "email": document.getElementById("email").value,
+                        "nome": document.getElementById("nome").value,
+                        "cognome": document.getElementById("cognome").value
+                    },
+                    "filecloud": "",
+                    "username": "",
+                    "password": "",
+                    "id": ""};
+
+        var richiestas = JSON.stringify(richiesta);
+
+        $http({
+            method: "POST",
+            url: urlSig,
+            data: richiestas
+
+        }).then(function () {
+            //conferma di avvenuta iscrizione
+            alert("UTENTE REGISTRATO");
+        },
+                function (response) {
+
+                    alert(response.statusText);
+                });
+
+
+
     };
 
-    $scope.registrati = function(){
-        
-         richiesta = {"user" : $scope.jUser}
-         var richiestas = JSON.stringify(richiesta) 
-          
-    $http({
-        method : "POST",
-        url : urlSig,
-        body : richiestas
-               
-    }).then(function successo(response){
-        
-       //conferma di avvenuta iscrizione
-       alert("UTENTE REGISTRATO");
-       
-    }) , function fallimento(response){
-        
-        alert(response.statusText);
-        
-    }
-            
-    }
-
-
-
-});
-
+})      

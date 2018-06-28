@@ -101,10 +101,17 @@ public class UserStore {
     }
 
     public User findToken(String token) {
-
+        try{
+            
         return em.createNamedQuery(User.FIND_BY_TOKEN, User.class)
                 .setParameter("token", token)
                 .getSingleResult();
+        
+         }catch(NoResultException ex) {
+            
+            return null;
+            
+        }
     }
 
     public void validaUser(User user) throws Exception {

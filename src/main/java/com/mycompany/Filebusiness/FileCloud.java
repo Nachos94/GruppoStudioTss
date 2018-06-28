@@ -6,7 +6,7 @@
 package com.mycompany.Filebusiness;
 
 import com.mycompany.Userbusiness.User;
-import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -42,24 +42,20 @@ public class FileCloud implements Serializable {
     public static final String FIND_BY_DATE = "FileCloud.findByDate";
 
     public FileCloud() {
-    
-    this.data = new Date();
+
+        this.data = new Date();
     }
 
-    
-    
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Transient
-    private File file;
-    
+    private byte[] file;
+
     private User user;
     private String identificativo;
     private Date data;
-    
 
     @Override
     public int hashCode() {
@@ -90,11 +86,13 @@ public class FileCloud implements Serializable {
         return true;
     }
 
-    public File getFile() {
+    public byte[] getFile() {
+
         return file;
     }
 
-    public void setFile(File file) {
+    public void setFile(byte[] file) throws IOException {
+
         this.file = file;
     }
 
@@ -121,7 +119,6 @@ public class FileCloud implements Serializable {
     public void setData(Date data) {
         this.data = data;
     }
-  
 
     public Long getId() {
         return id;

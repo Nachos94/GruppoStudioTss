@@ -18,8 +18,11 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+
 
 /**
  *
@@ -59,6 +62,7 @@ public class UserResurces {
     @POST
     @Path("/caricaprofilo")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response caricaprofilo(Richiesta richiesta) throws Exception {
 
         User user = richiesta.getUser();
@@ -72,8 +76,8 @@ public class UserResurces {
 
     @POST
     @Path("/aggiungifile")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response aggiungiFile(Richiesta richiesta) throws Exception {
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response aggiungiFile(FormDataMultiPart form) throws Exception {
 
         FileCloud filecloud = richiesta.getFilecloud();
         User user = richiesta.getUser();
@@ -81,10 +85,9 @@ public class UserResurces {
         userstore.validaUser(user);
         filecloud.setUser(user);
         filecloudstore.insert(filecloud);
-        
-
         User u = userstore.findByUsername(user.getUsername());
         u.getFilesAssociati().add(filecloud);
+
         return Response.ok(u).build();
     }
 

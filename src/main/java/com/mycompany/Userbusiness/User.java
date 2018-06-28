@@ -30,7 +30,7 @@ import javax.persistence.NamedQuery;
     ,
   @NamedQuery(name = User.FIND_BY_ID, query = "select u from User u where u.id = :id")
     ,
-  @NamedQuery(name = User.FIND_BY_TOKEN , query = "select u from User u where u.token = :token")
+  @NamedQuery(name = User.FIND_BY_TOKEN, query = "select u from User u where u.token = :token")
 
 })
 
@@ -82,7 +82,6 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-   
 
     public Long getId() {
         return id;
@@ -124,11 +123,11 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public  List<FileCloud> getFilesAssociati() {
+    public List<FileCloud> getFilesAssociati() {
         return filesAssociati;
     }
 
-    public void setFilesAssociati( List<FileCloud> filesAssociati) {
+    public void setFilesAssociati(List<FileCloud> filesAssociati) {
         this.filesAssociati = filesAssociati;
     }
 

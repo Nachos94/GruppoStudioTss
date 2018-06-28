@@ -8,7 +8,6 @@ package com.mycompany.Filebusiness;
 import com.mycompany.utility.DuplicateFileCloudException;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -46,13 +45,14 @@ public class FileCloudStore {
                 .getSingleResult();
     }
 
-    public FileCloud findByIdentificativo(String identificativo , String username) {
+    public FileCloud findByIdentificativo(String identificativo, String username) {
 
         try {
             return em.createNamedQuery(FileCloud.FIND_BY_IDENTIFICATIVO, FileCloud.class)
                     .setParameter("identificativo", identificativo)
                     .setParameter("username", username)
                     .getSingleResult();
+
         } catch (Exception ex) {
 
             return null;
@@ -69,16 +69,20 @@ public class FileCloudStore {
 
     public void insert(FileCloud filecloud) throws Exception {
 
-        if (filecloud.getId() == null && findByIdentificativo(filecloud.getIdentificativo() , filecloud.getUser().getUsername()) == null) {
+        if (filecloud.getId() == null && findByIdentificativo(filecloud.getIdentificativo(), filecloud.getUser().getUsername()) == null) {
             //fare outputstream di scrittura su disco del server per salvare il file contenuto in filecloud 
             //ma che non viene trattato come colonna grazie Juri
+
             em.merge(filecloud);
-            
-            File file = filecloud.getFile();
-            file.renameTo(new File(DATA_DIR + "/Datadir/" + file.getName()));
-            
-                
-                         
+            File file = new File(DATA_DIR + "/Datadir/" + filecloud.getIdentificativo());
+           
+            FileOutputStream out = new FileOutputStream(file);
+           
+            out.write(filecloud.getFile());
+           
+            out.close();
+                      
+
         } else {
 
             throw new DuplicateFileCloudException();

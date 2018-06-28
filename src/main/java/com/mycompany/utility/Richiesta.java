@@ -7,11 +7,13 @@ package com.mycompany.utility;
 
 import com.mycompany.Filebusiness.FileCloud;
 import com.mycompany.Userbusiness.User;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author tss
  */
+@XmlRootElement
 public class Richiesta {
 
     private FileCloud filecloud;
