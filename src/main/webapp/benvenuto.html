@@ -39,12 +39,13 @@
         <h2 class="nomeUtente">{{Nome + " " + Cognome}}</h2>
         <div class="space-10"></div>
         <div class="space-10"></div>
+        <form enctype="multipart/form-data"> 
         <label> 
             <i class="fas fa-cloud-upload-alt"></i>
             <input type="file" id="File">
             </label>
         <button ng-click="fileupload()" style="cursor: pointer">UPLOAD</button>
-        
+        </form>
         
         <div class="space-10"></div>
         <div class="space-10"></div>
@@ -77,7 +78,7 @@
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-<script src="controllerbenvenuto.js"></script>
+<script src="javascript/controllerbenvenuto.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 

@@ -11,7 +11,10 @@ import com.mycompany.utility.AlreadyHaveThatUserException;
 import com.mycompany.utility.Richiesta;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
+import javafx.scene.input.DataFormat;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -37,12 +40,7 @@ public class UserResurces {
     @Inject
     FileCloudStore filecloudstore;
 
-    @GET
-    public Response ok() {
-
-        return Response.ok("report ok").build();
-
-    }
+    
 
     @POST
     @Path("/saveuser")
@@ -79,8 +77,17 @@ public class UserResurces {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response aggiungiFile(FormDataMultiPart form) throws Exception {
 
-        FileCloud filecloud = richiesta.getFilecloud();
-        User user = richiesta.getUser();
+         FileCloud filecloud = new FileCloud();
+        
+      filecloud.setFile(form.getField("file").getValueAs(byte[].class));
+      filecloud.setIdentificativo(form.getField("identificativo").getValue());
+        
+        User user = form.getField("user").getValueAs(User.class);
+       
+       user.setUsername(form.getField("username").getValue());
+       user.setToken(form.getField("token").getValue());
+       user.setTokenend(form.getField("tokenend").getValueAs(Date.class));
+                
 
         userstore.validaUser(user);
         filecloud.setUser(user);
@@ -90,6 +97,8 @@ public class UserResurces {
 
         return Response.ok(u).build();
     }
+    
+    
 
     @DELETE
     @Path("/rimuovifile")

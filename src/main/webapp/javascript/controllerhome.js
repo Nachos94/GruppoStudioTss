@@ -57,7 +57,7 @@ angular.module("application", []).controller("controller", function ($scope, $ht
 
         }, function (response) {
 
-            alert(response.statusText);
+            alert(response.header);
 
 
         });
@@ -92,7 +92,7 @@ angular.module("application", []).controller("controller", function ($scope, $ht
         },
                 function (response) {
 
-                    alert(response.statusText);
+                    alert(response.header.causa);
                 });
 
 
