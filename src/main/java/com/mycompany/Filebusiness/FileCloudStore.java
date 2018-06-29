@@ -8,6 +8,9 @@ package com.mycompany.Filebusiness;
 import com.mycompany.utility.DuplicateFileCloudException;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -74,14 +77,7 @@ public class FileCloudStore {
             //ma che non viene trattato come colonna grazie Juri
 
             em.merge(filecloud);
-            File file = new File(DATA_DIR + "/Datadir/" + filecloud.getIdentificativo());
-           
-            FileOutputStream out = new FileOutputStream(file);
-           
-            out.write(filecloud.getFile());
-           
-            out.close();
-                      
+         
 
         } else {
 

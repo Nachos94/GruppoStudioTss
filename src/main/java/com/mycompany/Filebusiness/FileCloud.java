@@ -7,6 +7,7 @@ package com.mycompany.Filebusiness;
 
 import com.mycompany.Userbusiness.User;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -51,7 +52,7 @@ public class FileCloud implements Serializable {
     private Long id;
 
     @Transient
-    private byte[] file;
+    private InputStream file;
 
     private User user;
     private String identificativo;
@@ -86,12 +87,12 @@ public class FileCloud implements Serializable {
         return true;
     }
 
-    public byte[] getFile() {
+    public InputStream getFile() {
 
         return file;
     }
 
-    public void setFile(byte[] file) throws IOException {
+    public void setFile(InputStream inputstream) throws IOException {
 
         this.file = file;
     }

@@ -14,6 +14,7 @@ var urlSig = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/saveus
 
 angular.module("application", []).controller("controller", function ($scope, $http) {
 
+ 
     $scope.jUser = {};
     $scope.login = false;
     $scope.showS = function () {
@@ -57,7 +58,7 @@ angular.module("application", []).controller("controller", function ($scope, $ht
 
         }, function (response) {
 
-            alert(response.header);
+            alert(response.header.causa);
 
 
         });

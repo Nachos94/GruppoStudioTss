@@ -11,11 +11,16 @@ import com.mycompany.utility.AlreadyHaveThatUserException;
 import com.mycompany.utility.Richiesta;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import javafx.scene.input.DataFormat;
 import javax.inject.Inject;
+import javax.swing.JOptionPane;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -24,6 +29,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.media.multipart.ContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 
@@ -40,7 +47,21 @@ public class UserResurces {
     @Inject
     FileCloudStore filecloudstore;
 
+    @POST
+    @Path("/get")
+    @Consumes(MediaType.APPLICATION_JSON)
     
+    public Response aggiornaprofilo(Richiesta richiesta) throws Exception{
+        
+       User user = userstore.findById(richiesta.getUser().getId());
+       
+        List<FileCloud> listafile = filecloudstore.findAllbyUser(user.getUsername());
+        
+        user.setFilesAssociati(listafile);
+        
+        
+        return Response.ok(user).build();
+    }
 
     @POST
     @Path("/saveuser")
@@ -75,27 +96,35 @@ public class UserResurces {
     @POST
     @Path("/aggiungifile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response aggiungiFile(FormDataMultiPart form) throws Exception {
 
          FileCloud filecloud = new FileCloud();
         
-      filecloud.setFile(form.getField("file").getValueAs(byte[].class));
+            FormDataBodyPart filePart = form.getField("file");
+            ContentDisposition contentDispositionHeader = filePart.getContentDisposition();
+
+            InputStream fileInputStream = filePart.getValueAs(InputStream.class);
+
+            Files.copy(fileInputStream,
+                    Paths.get(filecloudstore.getDataDir() +"/Datadir/" + contentDispositionHeader.getFileName()),
+                    StandardCopyOption.REPLACE_EXISTING);
+      
+      
       filecloud.setIdentificativo(form.getField("identificativo").getValue());
+      
+      
+          
         
-        User user = form.getField("user").getValueAs(User.class);
-       
-       user.setUsername(form.getField("username").getValue());
-       user.setToken(form.getField("token").getValue());
-       user.setTokenend(form.getField("tokenend").getValueAs(Date.class));
-                
-
-        userstore.validaUser(user);
-        filecloud.setUser(user);
-        filecloudstore.insert(filecloud);
-        User u = userstore.findByUsername(user.getUsername());
-        u.getFilesAssociati().add(filecloud);
-
-        return Response.ok(u).build();
+      User user = userstore.findById(Long.parseLong(form.getField("userid").getValue()));
+        
+      filecloud.setUser(user); 
+      filecloudstore.insert(filecloud);
+      userstore.validaUser(user);
+      user.getFilesAssociati().add(filecloud);
+        
+        return Response.ok().build();
+    
     }
     
     
