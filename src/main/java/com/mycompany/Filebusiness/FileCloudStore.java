@@ -89,7 +89,7 @@ public class FileCloudStore {
     public void delete(long id) {
 
         FileCloud f = findByID(id);
-        File file = new File(DATA_DIR + f.getIdentificativo());
+        File file = new File(DATA_DIR  + "/Datadir/" + f.getIdentificativo());
 
         if (file != null) {
             file.delete();

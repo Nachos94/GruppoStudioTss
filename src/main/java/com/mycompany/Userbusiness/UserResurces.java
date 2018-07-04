@@ -161,7 +161,7 @@ public class UserResurces {
         long fileid = richiesta.getId();
 
         FileCloud f = filecloudstore.findByID(fileid);
-        File file = new File(filecloudstore.getDataDir() + f.getIdentificativo());
+        File file = new File(filecloudstore.getDataDir() + "/Datadir/" + f.getIdentificativo());
 
         if (file == null) {
             throw new FileNotFoundException();

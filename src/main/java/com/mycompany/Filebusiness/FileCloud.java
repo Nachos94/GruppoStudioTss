@@ -30,7 +30,7 @@ import javax.persistence.Transient;
     ,
 @NamedQuery(name = FileCloud.FIND_BY_IDENTIFICATIVO, query = "select f.identificativo from FileCloud f where f.identificativo = :identificativo AND f.user.Username = :username")
     ,
-@NamedQuery(name = FileCloud.FIND_BY_ID, query = "select f.identificativo from FileCloud f where f.id = :id")
+@NamedQuery(name = FileCloud.FIND_BY_ID, query = "select f from FileCloud f where f.id = :id")
 
 })
 
