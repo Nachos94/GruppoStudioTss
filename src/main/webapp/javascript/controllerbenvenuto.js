@@ -44,11 +44,9 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
                 "token": user.token,
                 "tokenend": user.tokenend,
                 "fileassociati": user.fileassociati
-            },
-            "filecloud": "",
-            "username": "",
-            "password": "",
-            "id": ""};
+            }};
+          
+           
 
 
          let richiestas = JSON.stringify(richiesta);
@@ -123,17 +121,18 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
                 "tokenend": user.tokenend,
                 "fileassociati": user.fileassociati
             },
-            "filecloud": "",
-            "username": "",
-            "password": "",
+           
             "id": id};
 
             let richiestas = JSON.stringify(richiesta);
 
          $http({ url : urlDelete,
                  method: "DELETE",
-                 data: richiestas
-
+                 data: richiestas,
+                 headers: {
+                    'Content-type': 'application/json'
+                    } 
+                
                 }).then(response => {
 
                    
@@ -165,20 +164,20 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
                 "tokenend": user.tokenend,
                 "fileassociati": user.fileassociati
             },
-            "filecloud": "",
-            "username": "",
-            "password": "",
+           
             "id": id};
 
          let richiestas = JSON.stringify(richiesta);
          
          
-
          $http({ 
-                  
+          
                  url : urlScarica,
                  method: "POST",
-                 data: richiestas
+                 data: richiestas,
+                  headers: {
+                    'Content-type': 'application/json'
+                    } 
 
                 }).then(response => {
 

@@ -45,7 +45,7 @@ public class FileCloudStore {
 
         return em.createNamedQuery(FileCloud.FIND_BY_ID, FileCloud.class)
                 .setParameter("id", id)
-                .getSingleResult();
+                .getSingleResult(); 
     }
 
     public FileCloud findByIdentificativo(String identificativo, String username) {
