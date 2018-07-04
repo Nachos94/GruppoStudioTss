@@ -8,30 +8,33 @@
 var urlSaveFile = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/aggiungifile";
 var urlLog = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/caricaprofilo";
 var urlGet = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/get";
+var urlDelete = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/rimuovifile";
+var urlScarica = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/scaricafile";
 
 angular.module("benvenuto", []).controller("controller", function ($scope, $http) {
 
-    
+
     var user;
+    var files;
+   
     (function inizializza() {
 
         user = JSON.parse(localStorage.getItem("user"));
-        
+
         $scope.Nome = user.nome;
         $scope.Cognome = user.cognome;
-              
+       
+      datipersonali()
+          
       
-         
-        // {"data" : "20/06/1994" , "identificativo" : "andrea"}
-    
     })();
-    
-    
+
+
 
     function datipersonali() {
 
 
-        var richiesta = {"user": {
+         let richiesta = {"user": {
                 "id": user.id,
                 "username": user.username,
                 "password": user.password,
@@ -48,28 +51,22 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
             "id": ""};
 
 
-        var richiestas = JSON.stringify(richiesta);
+         let richiestas = JSON.stringify(richiesta);
 
 
         $http({
             method: "POST",
             url: urlGet,
-            data: richiestas,
+            data: richiestas
 
         }).then(function (response) {
-
-
-        localStorage.setItem("user", angular.toJson(response.data));
-            
-        user = JSON.parse(localStorage.getItem("user"));
+           
         
-          $scope.files = {};
-        
-        
-        
-        
+            localStorage.setItem("user", angular.toJson(response.data));
+            user = JSON.parse(localStorage.getItem("user"));
        
-
+           $scope.FilesAssociati = user.filesAssociati;
+                 
         }, function (response) {
 
             alert(response.header);
@@ -77,16 +74,7 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
 
         });
 
-
-
     }
-
-
-
-
-
-
-
 
 
     $scope.fileupload = function () {
@@ -103,9 +91,6 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
         data.append("tokenend", user.tokenend);
 
 
-
-
-
         fetch(urlSaveFile,
                 {
                     method: "POST",
@@ -113,14 +98,96 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
 
                 }).then(response => {
 
-
-            datipersonali();
+             alert("FILE CARICATO CON SUCCESSO")
+             datipersonali();
+             
         })
 
-
-
-
-
-
     }
+
+    $scope.elimina = function(event) {
+  
+
+         let id = event.target.id;
+        
+        console.log(id);
+
+        let richiesta = {"user": {
+                "id": user.id,
+                "username": user.username,
+                "password": user.password,
+                "email": user.email,
+                "nome": user.nome,
+                "cognome": user.cognome,
+                "token": user.token,
+                "tokenend": user.tokenend,
+                "fileassociati": user.fileassociati
+            },
+            "filecloud": "",
+            "username": "",
+            "password": "",
+            "id": id};
+
+            let richiestas = JSON.stringify(richiesta);
+
+         $http({ url : urlDelete,
+                 method: "DELETE",
+                 data: richiestas
+
+                }).then(response => {
+
+                   
+                datipersonali();
+
+            
+        }) , function() {
+
+            alert("ERRORE, qualcosa è andato storto...")
+        }
+    }
+    
+    
+  $scope.scarica = function(event) {
+
+     let id = event.target.id;
+        
+        console.log(id);
+
+
+        let richiesta = {"user": {
+                "id": user.id,
+                "username": user.username,
+                "password": user.password,
+                "email": user.email,
+                "nome": user.nome,
+                "cognome": user.cognome,
+                "token": user.token,
+                "tokenend": user.tokenend,
+                "fileassociati": user.fileassociati
+            },
+            "filecloud": "",
+            "username": "",
+            "password": "",
+            "id": id};
+
+         let richiestas = JSON.stringify(richiesta);
+         
+         
+
+         $http({ 
+                  
+                 url : urlScarica,
+                 method: "POST",
+                 data: richiestas
+
+                }).then(response => {
+
+                datipersonali();
+
+            } , function() {
+                 alert("ERRORE, qualcosa è andato storto...")
+            })
+    }
+
 })    
+

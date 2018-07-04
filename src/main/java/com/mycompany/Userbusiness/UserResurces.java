@@ -8,6 +8,7 @@ package com.mycompany.Userbusiness;
 import com.mycompany.Filebusiness.FileCloud;
 import com.mycompany.Filebusiness.FileCloudStore;
 import com.mycompany.utility.AlreadyHaveThatUserException;
+import com.mycompany.utility.DuplicateFileCloudException;
 import com.mycompany.utility.Richiesta;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,15 +16,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
-import javafx.scene.input.DataFormat;
 import javax.inject.Inject;
-import javax.swing.JOptionPane;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -50,15 +46,20 @@ public class UserResurces {
     @POST
     @Path("/get")
     @Consumes(MediaType.APPLICATION_JSON)
-    
+    @Produces(MediaType.APPLICATION_JSON)
     public Response aggiornaprofilo(Richiesta richiesta) throws Exception{
         
        User user = userstore.findById(richiesta.getUser().getId());
        
         List<FileCloud> listafile = filecloudstore.findAllbyUser(user.getUsername());
         
-        user.setFilesAssociati(listafile);
+        for(FileCloud f : listafile) {
+            
+            f.setUser(null);
+            
+        }
         
+        user.setFilesAssociati(listafile);
         
         return Response.ok(user).build();
     }
@@ -66,6 +67,7 @@ public class UserResurces {
     @POST
     @Path("/saveuser")
     @Consumes(MediaType.APPLICATION_JSON)
+     @Produces(MediaType.APPLICATION_JSON)
     public Response saveUser(Richiesta richiesta) throws Exception {
 
         User u = richiesta.getUser();
@@ -100,7 +102,11 @@ public class UserResurces {
     public Response aggiungiFile(FormDataMultiPart form) throws Exception {
 
          FileCloud filecloud = new FileCloud();
-        
+         filecloud.setIdentificativo(form.getField("identificativo").getValue());
+         
+       User user = userstore.findById(Long.parseLong(form.getField("userid").getValue()));
+          
+        if(filecloudstore.findByIdentificativo(filecloud.getIdentificativo(), user.getUsername()) == null){
             FormDataBodyPart filePart = form.getField("file");
             ContentDisposition contentDispositionHeader = filePart.getContentDisposition();
 
@@ -110,18 +116,19 @@ public class UserResurces {
                     Paths.get(filecloudstore.getDataDir() +"/Datadir/" + contentDispositionHeader.getFileName()),
                     StandardCopyOption.REPLACE_EXISTING);
       
+        } else {
+            
+            
+            throw new DuplicateFileCloudException();
+        }
       
-      filecloud.setIdentificativo(form.getField("identificativo").getValue());
       
-      
-          
-        
-      User user = userstore.findById(Long.parseLong(form.getField("userid").getValue()));
-        
-      filecloud.setUser(user); 
+       filecloud.setUser(user); 
       filecloudstore.insert(filecloud);
       userstore.validaUser(user);
       user.getFilesAssociati().add(filecloud);
+          
+     
         
         return Response.ok().build();
     
@@ -148,6 +155,7 @@ public class UserResurces {
     @POST
     @Path("/scaricafile")
     @Consumes(MediaType.APPLICATION_JSON)
+    
     public Response scaricaFile(Richiesta richiesta) throws Exception {
 
         long fileid = richiesta.getId();
