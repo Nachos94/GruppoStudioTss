@@ -12,7 +12,12 @@ h1{
   color: #fff;
   font-family: 'Montserrat', sans-serif;
 }
-
+button{
+    background-color: #fff;
+    border: #3E9DDD solid 3px;
+    color: #3E9DDD;
+    border-radius: 5px;
+}
 .container-fluid{
     background:  linear-gradient(120deg,   #84fab0 0%, #8fd3f4 100%);
     min-height: 1080px;

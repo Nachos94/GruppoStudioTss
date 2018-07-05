@@ -9,7 +9,7 @@ var urlSaveFile = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/a
 var urlLog = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/caricaprofilo";
 var urlGet = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/get";
 var urlDelete = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/rimuovifile";
-var urlScarica = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/scaricafile";
+var urlScarica = "http://localhost:8080/ProgettoEsameCiac/ciaccloud/userstore/scaricafile/";
 
 angular.module("benvenuto", []).controller("controller", function ($scope, $http) {
 
@@ -43,7 +43,7 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
                 "cognome": user.cognome,
                 "token": user.token,
                 "tokenend": user.tokenend,
-                "fileassociati": user.fileassociati
+                "fileAssociati": user.fileassociati
             }};
           
            
@@ -119,7 +119,7 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
                 "cognome": user.cognome,
                 "token": user.token,
                 "tokenend": user.tokenend,
-                "fileassociati": user.fileassociati
+                "fileAssociati": user.fileassociati
             },
            
             "id": id};
@@ -127,7 +127,7 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
             let richiestas = JSON.stringify(richiesta);
 
          $http({ url : urlDelete,
-                 method: "DELETE",
+                 method: "POST",
                  data: richiestas,
                  headers: {
                     'Content-type': 'application/json'
@@ -152,35 +152,31 @@ angular.module("benvenuto", []).controller("controller", function ($scope, $http
         
         console.log(id);
 
-
-        let richiesta = {"user": {
-                "id": user.id,
-                "username": user.username,
-                "password": user.password,
-                "email": user.email,
-                "nome": user.nome,
-                "cognome": user.cognome,
-                "token": user.token,
-                "tokenend": user.tokenend,
-                "fileassociati": user.fileassociati
-            },
-           
-            "id": id};
-
-         let richiestas = JSON.stringify(richiesta);
-         
          
          $http({ 
           
-                 url : urlScarica,
-                 method: "POST",
-                 data: richiestas,
-                  headers: {
-                    'Content-type': 'application/json'
-                    } 
+                 url : urlScarica + id,
+                 method: "GET",
 
                 }).then(response => {
+                
+                var file = new Blob([response], {type: 'application/octet-stream'});
+                 var isChrome = !!window.chrome && !!window.chrome.webstore;
+               
 
+                if (isChrome){
+                    var url = window.URL || window.webkitURL;
+
+                    var downloadLink = angular.element('<a></a>');
+                    downloadLink.attr('href',url.createObjectURL(file));
+                    downloadLink.attr('target','_self');
+                    downloadLink.attr('download', file.name);
+                    downloadLink[0].click();
+                }
+               
+                
+                
+                
                 datipersonali();
 
             } , function() {

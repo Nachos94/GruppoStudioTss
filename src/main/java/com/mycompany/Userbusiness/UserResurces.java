@@ -11,8 +11,12 @@ import com.mycompany.utility.AlreadyHaveThatUserException;
 import com.mycompany.utility.DuplicateFileCloudException;
 import com.mycompany.utility.Richiesta;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -20,8 +24,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -123,7 +129,7 @@ public class UserResurces {
         }
       
       
-       filecloud.setUser(user); 
+      filecloud.setUser(user); 
       filecloudstore.insert(filecloud);
       userstore.validaUser(user);
       user.getFilesAssociati().add(filecloud);
@@ -136,7 +142,7 @@ public class UserResurces {
     
     
 
-    @DELETE
+    @POST
     @Path("/rimuovifile")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response rimuoviFile(Richiesta richiesta) throws Exception {
@@ -152,13 +158,11 @@ public class UserResurces {
         return Response.ok(u).build();
     }
 
-    @POST
-    @Path("/scaricafile")
-    @Consumes(MediaType.APPLICATION_JSON)
-    
-    public Response scaricaFile(Richiesta richiesta) throws Exception {
+    @GET
+    @Path("/scaricafile/{id}")
+    public Response scaricaFile(@PathParam("id") String id) throws Exception {
 
-        long fileid = richiesta.getId();
+        long fileid = Long.parseLong(id);
 
         FileCloud f = filecloudstore.findByID(fileid);
         File file = new File(filecloudstore.getDataDir() + "/Datadir/" + f.getIdentificativo());
@@ -166,8 +170,7 @@ public class UserResurces {
         if (file == null) {
             throw new FileNotFoundException();
         }
-
-        return Response.ok(file).build();
+     return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM).build();
     }
 
 }
